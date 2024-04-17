@@ -63,6 +63,7 @@ class Program
         }
 
         Console.WriteLine($"Log: {log}");
+        Console.WriteLine("-----------");
     }
 
     private static void AppendLog(StringBuilder log, object? data)
