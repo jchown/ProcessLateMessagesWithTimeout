@@ -38,6 +38,45 @@ Log: main
 
 As you can see above on one of the `Running process with timeout: -1` runs, the `main` branch is not printed. The reproduction rate is about 75%.
 
+# Other Platforms
+
+On Windows, the output is as expected:
+
+```
+Running process with timeout: -1
+[stdout] main
+[stdout] 
+[stderr] 
+[exited]
+-----------
+[√] Success
+-----------
+Running process with timeout: 1000
+[stdout] main
+[stdout] 
+[stderr] 
+[exited]
+-----------
+[√] Success
+-----------
+Running process with timeout: -1
+[stdout] main
+[stdout]
+[stderr]
+[exited]
+-----------
+[√] Success
+-----------
+Running process with timeout: 1000
+[stdout] main
+[stderr]
+[stdout]
+[exited]
+-----------
+[√] Success
+-----------
+```
+
 # Dependencies
 
 This was first observed inside Unity's runtime. This example uses .NET 6. I am using an M3 Macbook Air with git 2.44.0 and Rider 2024.1.
