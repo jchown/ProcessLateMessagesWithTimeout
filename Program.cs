@@ -17,34 +17,34 @@ class Program
     {
         Console.WriteLine("Running process with timeout: " + timeout);
 
-        var ps = new ProcessStartInfo();
-
-        ps.UseShellExecute = false;
-        ps.CreateNoWindow = true;
-        ps.ErrorDialog = false;
-
-        ps.RedirectStandardInput = true;
-        ps.RedirectStandardOutput = true;
-        ps.RedirectStandardError = true;
-        ps.WorkingDirectory = Directory.GetCurrentDirectory();
-        ps.FileName = GetGitExecutablePath();
-        ps.Arguments = "rev-parse --abbrev-ref HEAD";
-
-        var log = new StringBuilder();
+        var psi = new ProcessStartInfo
+        {
+            FileName = GetGitExecutablePath(),
+            Arguments = "rev-parse --abbrev-ref HEAD",
+            WorkingDirectory = Directory.GetCurrentDirectory(),
+            
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            ErrorDialog = false,
+            
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
+        };
 
         var process = new Process();
-        process.StartInfo = ps;
+        process.StartInfo = psi;
         process.EnableRaisingEvents = true;
 
-        process.OutputDataReceived += (sender, rcv) => AppendLog(log, $"[stdout] {rcv.Data}");
-        process.ErrorDataReceived += (sender, rcv) => AppendLog(log, $"[stderr] {rcv.Data}");
-        process.Exited += (o, e) => AppendLog(log, "[exited]");			
+        var log = new StringBuilder();
+        process.OutputDataReceived += (_, rcv) => AppendLog(log, $"[stdout] {rcv.Data}");
+        process.ErrorDataReceived += (_, rcv) => AppendLog(log, $"[stderr] {rcv.Data}");
+        process.Exited += (_, _) => AppendLog(log, "[exited]");			
 
         try
         {
             if (!process.Start())
             {
-                process.Dispose();
                 throw new Exception("Failed to launch");
             }
         }
@@ -59,21 +59,19 @@ class Program
         
         using (process)
         {
-            process.WaitForExit(timeout);
+            if (!process.WaitForExit(timeout))
+            {
+                throw new Exception("Failed to finish in time");
+            }
         }
+        
+        //  After the Dispose at this point. All buffers should have been flushed.
 
         var result = log.ToString().Trim();
+        
         Console.WriteLine(result);
         Console.WriteLine("-----------");
-
-        if (!result.Contains("main"))
-        {
-            Console.WriteLine("[X] Failed");
-        }
-        else
-        {
-            Console.WriteLine("[\u2713] Success");
-        }
+        Console.WriteLine(!result.Contains("main") ? "[X] Failed" : "[\u2713] Success");
         Console.WriteLine("-----------");
     }
 
@@ -97,7 +95,7 @@ class Program
         lock (log)
         {
             log.Append(data?.ToString() ?? "");
-            log.Append("\n");
+            log.Append('\n');
         }
     }
 }

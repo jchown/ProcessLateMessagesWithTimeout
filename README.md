@@ -79,4 +79,6 @@ Running process with timeout: 1000
 
 # Dependencies
 
-This was first observed inside Unity's runtime. This example uses .NET 6. I am using an M3 Macbook Air with git 2.44.0 and Rider 2024.1.
+This was first observed inside Unity's runtime. This example uses .NET 6.
+
+I am using an M3 Macbook Air with git 2.44.0 and Rider 2024.1.
