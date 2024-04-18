@@ -11,8 +11,8 @@ which should just print the current branch.
 # Reproduction
 
 1. Clone this repository
-3. Run `which git` and make sure the code matches.
-2. Run the code in Rider or Visual Studio.
+2. Run `which git` and make sure the code matches.
+3. Run the code in Rider or Visual Studio.
 4. Observe the output:
 
 ```
@@ -74,6 +74,44 @@ Running process with timeout: 1000
 [exited]
 -----------
 [√] Success
+-----------
+```
+
+On WSL2, the output is similar, although 50% of the time an empty stderr message is 
+received before the stdout:
+
+```
+Running process with timeout: -1
+[stderr]
+[stdout] main
+[stdout]
+[exited]
+-----------
+[✓] Success
+-----------
+Running process with timeout: 1000
+[stderr]
+[stdout] main
+[stdout]
+[exited]
+-----------
+[✓] Success
+-----------
+Running process with timeout: -1
+[stdout] main
+[stdout]
+[stderr]
+[exited]
+-----------
+[✓] Success
+-----------
+Running process with timeout: 1000
+[stdout] main
+[stdout]
+[stderr]
+[exited]
+-----------
+[✓] Success
 -----------
 ```
 

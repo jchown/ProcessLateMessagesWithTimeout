@@ -84,6 +84,9 @@ class Program
             
             case PlatformID.Win32NT:
                 return @"C:\Program Files\Git\cmd\git.exe";
+ 
+            case PlatformID.Unix:
+                return "/usr/bin/git";
             
             default:
                 throw new Exception("Unsupported platform");
